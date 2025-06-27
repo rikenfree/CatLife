@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Video;
+using SuperStarSdk;
 
 public class StoryScript : MonoBehaviour
 {
@@ -19,6 +20,16 @@ public class StoryScript : MonoBehaviour
 
     public void SetURLAndPlayVideo()
     {
-        VideoController.instance.PlayVideo(url);
+        if (SuperStarAd.Instance.NoAds == 0)
+        {
+            SuperStarAd.Instance.ShowForceInterstitialWithLoader((k) =>
+            {
+                VideoController.instance.PlayVideo(url);
+            }, 3);
+        }
+        else
+        {
+            VideoController.instance.PlayVideo(url);
+        }
     }
 }

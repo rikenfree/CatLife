@@ -5,6 +5,7 @@ using TMPro;
 using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine.Video;
+using SuperStarSdk;
 
 public class UiManager : MonoBehaviour
 {
@@ -21,6 +22,8 @@ public class UiManager : MonoBehaviour
     public SimpleScrollSnap scrollSnap;
 
     public TextMeshProUGUI loadingText;
+
+    public GameObject gridPanel;
 
     void Start()
     {
@@ -43,8 +46,19 @@ public class UiManager : MonoBehaviour
     {
         if (pageIndex == scrollSnap.NumberOfPanels - 1)
         {
-            nextButton.gameObject.SetActive(false);
-            getStartedButton.gameObject.SetActive(true);
+            if (SuperStarAd.Instance.NoAds == 0)
+            {
+                SuperStarAd.Instance.ShowForceInterstitialWithLoader((k) =>
+                    {
+                        nextButton.gameObject.SetActive(false);
+                        getStartedButton.gameObject.SetActive(true);
+                    }, 3);
+            }
+            else
+            {
+                nextButton.gameObject.SetActive(false);
+                getStartedButton.gameObject.SetActive(true);
+            }
         }
         else
         {
@@ -110,9 +124,18 @@ public class UiManager : MonoBehaviour
         VideoController.instance.videoPlayer.Stop();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void HideGridPanel()
     {
-        
+        if (SuperStarAd.Instance.NoAds == 0)
+        {
+            SuperStarAd.Instance.ShowForceInterstitialWithLoader((k) =>
+            {
+                gridPanel.SetActive(false);
+            }, 3);
+        }
+        else
+        {
+            gridPanel.SetActive(false);
+        }
     }
 }
