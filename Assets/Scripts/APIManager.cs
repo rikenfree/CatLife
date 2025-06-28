@@ -11,20 +11,25 @@ public class APIManager : MonoBehaviour
 {
     public AppData appData = new AppData();
 
-   string appDataUrl = "https://velocitytechnosoft.com/SocialVideoManagement/fetch_data.php?page=1&limit=10";
+    string appDataUrl = "https://velocitytechnosoft.com/SocialVideoManagement/fetch_data.php?page=1&limit=10";
 
     public GameObject NoInternet;
 
     public static APIManager instance;
 
+    public List<FavouriteData> favouriteData = new List<FavouriteData>();
+    public string favouriteIconUrl;
+    public string favouriteVideoUrl;
+
     private void Awake()
     {
-        if(instance == null)
+        if (instance == null)
             instance = this;
     }
 
     void Start()
     {
+        LoadFavouritesFromPrefs();
         GetAllData();
     }
 
@@ -173,6 +178,101 @@ public class APIManager : MonoBehaviour
             Debug.Log("Error : " + www.error);
         }
     }
+
+    public GameObject favouriteScreenContent;
+
+    //public void AddFavouriteData()
+    //{
+    //    FavouriteData data = new FavouriteData();
+    //    data.videoUrl = favouriteVideoUrl;
+
+    //    // Check if already in the list
+    //    FavouriteData existingData = favouriteData.Find(x => x.videoUrl == data.videoUrl);
+
+    //    if (existingData == null)
+    //    {
+    //        favouriteData.Add(data);
+    //        ShowDataInFavouriteScreen(data.videoUrl);
+    //        Debug.Log("Added to favourites: " + favouriteVideoUrl);
+    //    }
+    //    else
+    //    {
+    //        favouriteData.Remove(existingData);
+    //        Debug.Log("Removed from favourites: " + favouriteVideoUrl);
+    //    }
+
+    //    SaveFavouritesToPrefs();
+    //}
+
+    public void AddFavouriteData()
+    {
+        FavouriteData data = new FavouriteData();
+        data.videoUrl = favouriteVideoUrl;
+
+        FavouriteData existingData = favouriteData.Find(x => x.videoUrl == data.videoUrl);
+
+        if (existingData == null)
+        {
+            favouriteData.Add(data);
+            ShowDataInFavouriteScreen(data.videoUrl);
+            Debug.Log("Added to favourites: " + favouriteVideoUrl);
+        }
+        else
+        {
+            favouriteData.Remove(existingData);
+            Debug.Log("Removed from favourites: " + favouriteVideoUrl);
+
+            string objectName = "Fav_" + favouriteVideoUrl;
+            Transform favItem = favouriteScreenContent.transform.FindChild(objectName);
+
+            if (favItem != null)
+            {
+                Destroy(favItem.gameObject);
+                Debug.Log("Destroyed UI object for: " + favouriteVideoUrl);
+            }
+            else
+            {
+                Debug.Log("Not Found: " + objectName);
+                Debug.Log("Not Found: " + favItem.name);
+            }
+        }
+
+        SaveFavouritesToPrefs();
+    }
+
+
+    public void SaveFavouritesToPrefs()
+    {
+        string json = JsonConvert.SerializeObject(favouriteData);
+        PlayerPrefs.SetString("favourites", json);
+        PlayerPrefs.Save();
+        Debug.Log("Favourites saved: " + json);
+    }
+
+    public void LoadFavouritesFromPrefs()
+    {
+        if (PlayerPrefs.HasKey("favourites"))
+        {
+            string json = PlayerPrefs.GetString("favourites");
+            favouriteData = JsonConvert.DeserializeObject<List<FavouriteData>>(json);
+            Debug.Log("Favourites loaded: " + json);
+
+            for (int i = 0; i < favouriteData.Count; i++)
+            {
+                ShowDataInFavouriteScreen(favouriteData[i].videoUrl);
+            }
+        }
+    }
+
+    public void ShowDataInFavouriteScreen(string data)
+    {
+        GameObject videoObject = Instantiate(story, favouriteScreenContent.transform);
+        videoObject.transform.GetComponent<StoryScript>().url = data;
+
+        // Set a unique name so we can destroy it later
+        videoObject.name = "Fav_" + data;
+    }
+
 }
 
 [System.Serializable]
@@ -214,6 +314,6 @@ public class CatogaryDatum
 [System.Serializable]
 public class FavouriteData
 {
-    public string iconUrl;
+    // public string iconUrl;
     public string videoUrl;
 }

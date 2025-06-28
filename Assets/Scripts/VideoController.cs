@@ -1,15 +1,17 @@
 using UnityEngine;
 using UnityEngine.Video;
+using SuperStarSdk;
 
 public class VideoController : MonoBehaviour
 {
-   public VideoPlayer videoPlayer;
+    public VideoPlayer videoPlayer;
     public GameObject videoDisplay;
     public GameObject panelToActivate;
     public GameObject downloadOptions;
     public GameObject allOptionObj;
 
     public static VideoController instance;
+    public string currentUrl;
 
     private void Awake()
     {
@@ -29,6 +31,8 @@ public class VideoController : MonoBehaviour
         videoPlayer.url = url;
         videoPlayer.Play();
         videoDisplay.SetActive(true);
+        APIManager.instance.favouriteVideoUrl = url;
+        UiManager.instance.loadingScreen.SetActive(false);
         if (videoPlayer != null)
         {
             // Register for video end event
@@ -45,6 +49,21 @@ public class VideoController : MonoBehaviour
     public void OpenDownloadOption(bool isActive)
     {
         downloadOptions.SetActive(isActive);
+    }
+
+    public void PlayURLVideo()
+    {
+        if (SuperStarAd.Instance.NoAds == 0)
+        {
+            SuperStarAd.Instance.ShowForceInterstitialWithLoader((k) =>
+            {
+                PlayVideo(currentUrl);
+            }, 3);
+        }
+        else
+        {
+            PlayVideo(currentUrl);
+        }
     }
 
 }

@@ -22,7 +22,7 @@ public class LoadingSlider : MonoBehaviour
     void Update()
     {
         int a = 0;
-        if (imageComp.fillAmount != 1f)
+        if (imageComp.fillAmount < 0.99f)
         {
             imageComp.fillAmount = imageComp.fillAmount + Time.deltaTime * speed;
             a = (int)(imageComp.fillAmount * 100);
@@ -39,7 +39,7 @@ public class LoadingSlider : MonoBehaviour
         else
         {
             Debug.Log("Complete");
-            
+            VideoController.instance.PlayURLVideo();
             //UiManager.instance.ScreenOnOff(UiManager.instance.loadingScreen, VideoController.instance.videoDisplay);
             // imageComp.fillAmount = 0.0f;
             // text.text = "0%";

@@ -8,30 +8,9 @@ public class StoryScript : MonoBehaviour
 
     public VideoPlayer videoPlayer;
 
-    void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-        
-    }
-
     public void SetURLAndPlayVideo()
     {
         UiManager.instance.loadingScreen.SetActive(true);
-
-        // if (SuperStarAd.Instance.NoAds == 0)
-        // {
-        //     SuperStarAd.Instance.ShowForceInterstitialWithLoader((k) =>
-        //     {
-        //         VideoController.instance.PlayVideo(url);
-        //     }, 3);
-        // }
-        // else
-        // {
-        //     VideoController.instance.PlayVideo(url);
-        // }
+        VideoController.instance.currentUrl = url;
     }
 }

@@ -28,6 +28,8 @@ public class UiManager : MonoBehaviour
 
     public GameObject downloadOption, loadingScreen;
 
+    public GameObject favouriteVideoScreen;
+
 
     void Awake()
     {
@@ -141,6 +143,15 @@ public class UiManager : MonoBehaviour
         Main_SelectionPanel.SetActive(true);
         VideoController.instance.panelToActivate.SetActive(false);
         VideoController.instance.videoDisplay.SetActive(false);
+    }
+
+    public void FavouriteBtnClick()
+    {
+        favouriteVideoScreen.SetActive(true);
+    }
+    public void BackToFavouriteBtnClick()
+    {
+        favouriteVideoScreen.SetActive(false);
     }
 
     public void HideGridPanel()
