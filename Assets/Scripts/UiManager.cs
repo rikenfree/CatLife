@@ -9,6 +9,7 @@ using SuperStarSdk;
 
 public class UiManager : MonoBehaviour
 {
+    public static UiManager instance;
     public GameObject LoadingPanel;
     public GameObject TutorialPanel;
     public GameObject Main_SelectionPanel;
@@ -24,6 +25,14 @@ public class UiManager : MonoBehaviour
     public TextMeshProUGUI loadingText;
 
     public GameObject gridPanel;
+
+    public GameObject downloadOption, loadingScreen;
+
+
+    void Awake()
+    {
+        instance = this;
+    }
 
     void Start()
     {
@@ -122,6 +131,16 @@ public class UiManager : MonoBehaviour
     public void StopVideoPlayer()
     {
         VideoController.instance.videoPlayer.Stop();
+        gridPanel.SetActive(true);
+        VideoController.instance.panelToActivate.SetActive(false);
+        VideoController.instance.videoDisplay.SetActive(false);
+    }
+
+    public void HomeBtnClick()
+    {
+        Main_SelectionPanel.SetActive(true);
+        VideoController.instance.panelToActivate.SetActive(false);
+        VideoController.instance.videoDisplay.SetActive(false);
     }
 
     public void HideGridPanel()

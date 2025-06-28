@@ -20,16 +20,18 @@ public class StoryScript : MonoBehaviour
 
     public void SetURLAndPlayVideo()
     {
-        if (SuperStarAd.Instance.NoAds == 0)
-        {
-            SuperStarAd.Instance.ShowForceInterstitialWithLoader((k) =>
-            {
-                VideoController.instance.PlayVideo(url);
-            }, 3);
-        }
-        else
-        {
-            VideoController.instance.PlayVideo(url);
-        }
+        UiManager.instance.loadingScreen.SetActive(true);
+
+        // if (SuperStarAd.Instance.NoAds == 0)
+        // {
+        //     SuperStarAd.Instance.ShowForceInterstitialWithLoader((k) =>
+        //     {
+        //         VideoController.instance.PlayVideo(url);
+        //     }, 3);
+        // }
+        // else
+        // {
+        //     VideoController.instance.PlayVideo(url);
+        // }
     }
 }

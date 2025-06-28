@@ -210,3 +210,10 @@ public class CatogaryDatum
     public string name;
     public string created_at;
 }
+
+[System.Serializable]
+public class FavouriteData
+{
+    public string iconUrl;
+    public string videoUrl;
+}

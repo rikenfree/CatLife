@@ -2,59 +2,84 @@ using System.Collections;
 using System.IO;
 using UnityEngine;
 using UnityEngine.Networking;
-public class VideoDownloder : MonoBehaviour
+
+public class VideoDownloader : MonoBehaviour
 {
-    [Header("Set this to your video URL")]
+    [Header("Single video URL")]
     public string videoUrl = "https://velocitytechnosoft.com/SocialVideoManagement/uploads/videos/6855294308378_1750411587.mp4";
-    [Header("Local file name")]
-    public string videoFileName = "downloadedVideo.mp4";
+
     private string savePath;
+
     void Start()
     {
-        savePath = Path.Combine(Application.persistentDataPath, videoFileName);
-        Debug.Log("Save path: " + savePath);
+        Debug.Log("🟢 Ready to download from: " + videoUrl);
     }
-    // Call this to start download
-    public void StartDownload()
+
+    public void OpenDownloadScreen()
     {
-        StartCoroutine(DownloadVideo());
+        // Open Download Option Screen..
+        VideoController.instance.allOptionObj.SetActive(false);
+        VideoController.instance.OpenDownloadOption(true);
     }
-    private IEnumerator DownloadVideo()
+
+    // Call to download as HD
+    public void DownloadHD()
     {
-        Debug.Log("Starting download from: " + videoUrl);
+        string fileName = "MyAwesomeVideo_HD.mp4";
+        savePath = Path.Combine(Application.persistentDataPath, fileName);
+        StartCoroutine(DownloadVideo(savePath));
+    }
+
+    // Call to download as 4K
+    public void Download4K()
+    {
+        string fileName = "MyAwesomeVideo_4K.mp4";
+        savePath = Path.Combine(Application.persistentDataPath, fileName);
+        StartCoroutine(DownloadVideo(savePath));
+    }
+
+    private IEnumerator DownloadVideo(string pathToSave)
+    {
+        Debug.Log("📥 Starting download from: " + videoUrl);
+
         using (UnityWebRequest request = UnityWebRequest.Get(videoUrl))
         {
             request.SendWebRequest();
+
 #if UNITY_2020_1_OR_NEWER
             while (!request.isDone)
             {
-                Debug.Log($"Downloading: {Mathf.RoundToInt(request.downloadProgress * 100)}%");
+                // Debug.Log($"⏳ Downloading... {Mathf.RoundToInt(request.downloadProgress * 100)}%");
                 yield return null;
             }
 #else
             yield return request.SendWebRequest();
 #endif
+
             if (request.result == UnityWebRequest.Result.Success)
             {
-                File.WriteAllBytes(savePath, request.downloadHandler.data);
-                Debug.Log(":white_check_mark: Video downloaded successfully!");
-                Debug.Log("Video saved at: " + savePath);
-                // Optional: Call a function or play the video after download
-                OnDownloadComplete();
+                File.WriteAllBytes(pathToSave, request.downloadHandler.data);
+                Debug.Log("✅ Download complete!");
+                Debug.Log("📁 Saved to: " + pathToSave);
+
+                OnDownloadComplete(pathToSave);
             }
             else
             {
-                Debug.LogError(":x: Download failed: " + request.error);
+                Debug.LogError("❌ Download failed: " + request.error);
             }
         }
     }
-    private void OnDownloadComplete()
+
+    private void OnDownloadComplete(string finalPath)
     {
-        // Optional action after download
-        Debug.Log("Download completed! Ready to play.");
+        Debug.Log("🎉 File saved successfully! Ready at: " + finalPath);
+        VideoController.instance.OpenDownloadOption(false);
+        // You can trigger playback or notification here
     }
-    // This returns the full path to access the video later (for playback)
-    public string GetVideoPath()
+
+    // Optional: Get last used video path
+    public string GetLastSavedVideoPath()
     {
         return savePath;
     }

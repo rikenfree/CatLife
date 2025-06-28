@@ -12,6 +12,7 @@ dependencies {
     implementation 'com.google.android.play:core-common:2.0.4' // Assets/GooglePlayPlugins/com.google.play.core/Editor/Dependencies.xml:3
     implementation 'com.google.android.play:review:2.0.0' // Assets/GooglePlayPlugins/com.google.play.review/Editor/Dependencies.xml:3
     implementation 'com.google.android.ump:user-messaging-platform:3.1.0' // Assets/GoogleMobileAds/Editor/GoogleUmpDependencies.xml:7
+    implementation 'com.google.code.gson:gson:2.8.5' // Assets/GoogleMobileAdsNative/Editor/GoogleMobileAdsNativeDependencies.xml:7
     implementation 'com.unity3d.ads:unity-ads:4.12.5' // Assets/LevelPlay/Editor/ISUnityAdsAdapterDependencies.xml:12
     implementation 'com.unity3d.ads-mediation:admob-adapter:4.3.48' // Assets/LevelPlay/Editor/ISAdMobAdapterDependencies.xml:12
     implementation 'com.unity3d.ads-mediation:facebook-adapter:4.3.48' // Assets/LevelPlay/Editor/ISFacebookAdapterDependencies.xml:12
@@ -22,10 +23,9 @@ dependencies {
 
 // Android Resolver Exclusions Start
 android {
-    namespace "com.unity3d.player"
-    ndkVersion "**NDKVERSION**"
-  packaging {
+  packagingOptions {
       exclude ('/lib/armeabi/*' + '*')
+      exclude ('/lib/armeabi-v7a/*' + '*')
       exclude ('/lib/mips/*' + '*')
       exclude ('/lib/mips64/*' + '*')
       exclude ('/lib/x86/*' + '*')
