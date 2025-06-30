@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply from: '../shared/keepUnitySymbols.gradle'
 **APPLY_PLUGINS**
 
 dependencies {
@@ -11,6 +12,7 @@ dependencies {
     implementation 'com.google.android.play:core-common:2.0.4' // Assets/GooglePlayPlugins/com.google.play.core/Editor/Dependencies.xml:3
     implementation 'com.google.android.play:review:2.0.0' // Assets/GooglePlayPlugins/com.google.play.review/Editor/Dependencies.xml:3
     implementation 'com.google.android.ump:user-messaging-platform:3.1.0' // Assets/GoogleMobileAds/Editor/GoogleUmpDependencies.xml:7
+    implementation 'com.google.code.gson:gson:2.8.5' // Assets/GoogleMobileAdsNative/Editor/GoogleMobileAdsNativeDependencies.xml:7
     implementation 'com.unity3d.ads:unity-ads:4.12.5' // Assets/LevelPlay/Editor/ISUnityAdsAdapterDependencies.xml:12
     implementation 'com.unity3d.ads-mediation:admob-adapter:4.3.48' // Assets/LevelPlay/Editor/ISAdMobAdapterDependencies.xml:12
     implementation 'com.unity3d.ads-mediation:facebook-adapter:4.3.48' // Assets/LevelPlay/Editor/ISFacebookAdapterDependencies.xml:12
@@ -23,6 +25,7 @@ dependencies {
 android {
   packagingOptions {
       exclude ('/lib/armeabi/*' + '*')
+      exclude ('/lib/armeabi-v7a/*' + '*')
       exclude ('/lib/mips/*' + '*')
       exclude ('/lib/mips64/*' + '*')
       exclude ('/lib/x86/*' + '*')
@@ -31,35 +34,39 @@ android {
 }
 // Android Resolver Exclusions End
 android {
+    namespace "com.unity3d.player"
     ndkPath "**NDKPATH**"
+    ndkVersion "**NDKVERSION**"
 
-    compileSdkVersion **APIVERSION**
-    buildToolsVersion '**BUILDTOOLS**'
+    compileSdk **APIVERSION**
+    buildToolsVersion = "**BUILDTOOLS**"
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     defaultConfig {
-        minSdkVersion **MINSDKVERSION**
-        targetSdkVersion **TARGETSDKVERSION**
+        minSdk **MINSDK**
+        targetSdk **TARGETSDK**
         ndk {
             abiFilters **ABIFILTERS**
+            debugSymbolLevel **DEBUGSYMBOLLEVEL**
         }
         versionCode **VERSIONCODE**
         versionName '**VERSIONNAME**'
         consumerProguardFiles 'proguard-unity.txt'**USER_PROGUARD**
+**DEFAULT_CONFIG_SETUP**
     }
 
-    lintOptions {
+    lint {
         abortOnError false
     }
 
-    aaptOptions {
+    androidResources {
         noCompress = **BUILTIN_NOCOMPRESS** + unityStreamingAssets.tokenize(', ')
         ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:!CVS:!thumbs.db:!picasa.ini:!*~"
-    }**PACKAGING_OPTIONS**
+    }**PACKAGING**
 }
 **IL_CPP_BUILD_SETUP**
 **SOURCE_BUILD_SETUP**

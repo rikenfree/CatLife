@@ -78,15 +78,30 @@ public class APIManager : MonoBehaviour
 
     public GameObject[] BannerVidDisplay;
 
+    // Add native ad prefab reference
+    public GameObject nativeAdPrefab;
+    
+    // Alternative: Array of different native ad prefabs for variety
+    public GameObject[] nativeAdPrefabs;
+
     public void SetUp()
+    {
+        StartCoroutine(IESetUpWithNativeAds());
+    }
+
+    IEnumerator IESetUpWithNativeAds()
     {
         for (int i = 0; i < appData.catogary.Count; i++)
         {
+            // Create cat section
             GameObject go = Instantiate(catSection, catParent);
-
             go.GetComponent<CategorySection>().titleTxt.text = appData.catogary[i].name;
             go.GetComponent<CategorySection>().id = i;
 
+            // Wait a frame to ensure the cat section is properly initialized
+            yield return null;
+
+            // Load stories for this category
             for (int j = 0; j < appData.catogary[i].catogaryData.Count; j++)
             {
                 if (i == 0 && j < 5)
@@ -100,7 +115,36 @@ public class APIManager : MonoBehaviour
                 go1.transform.GetComponent<StoryScript>().url = appData.catogary[i].catogaryData[j].videoUrl;
                 StartCoroutine(DownloadProfilePic(appData.catogary[i].catogaryData[j].iconUrl, go1.GetComponent<ProceduralImage>()));
             }
+
+            // Add delay between cat sections
+            yield return new WaitForSeconds(0.1f);
+
+            // Clone native ad prefab after each cat section (except the last one)
+            if (i < appData.catogary.Count - 1)
+            {
+                GameObject selectedNativeAdPrefab = GetNativeAdPrefab();
+                if (selectedNativeAdPrefab != null)
+                {
+                    GameObject nativeAd = Instantiate(selectedNativeAdPrefab, catParent);
+                    
+                    // Wait for native ad to initialize
+                    yield return new WaitForSeconds(0.2f);
+                }
+            }
         }
+    }
+
+    // Helper method to select which native ad prefab to use
+    private GameObject GetNativeAdPrefab()
+    {
+        // If you have an array of prefabs, randomly select one
+        if (nativeAdPrefabs != null && nativeAdPrefabs.Length > 0)
+        {
+            return nativeAdPrefabs[Random.Range(0, nativeAdPrefabs.Length)];
+        }
+        
+        // Otherwise use the single prefab
+        return nativeAdPrefab;
     }
 
     public Transform gridConteiner;

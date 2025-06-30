@@ -5,3 +5,10 @@ DefaultImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 12047
+  packageName: Log Viewer
+  packageVersion: 1.8
+  assetPath: Assets/Unity-Logs-Viewer/ReporterDocumentation/style.css
+  uploadId: 325743

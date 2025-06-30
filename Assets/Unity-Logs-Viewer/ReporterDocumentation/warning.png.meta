@@ -88,3 +88,10 @@ TextureImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 12047
+  packageName: Log Viewer
+  packageVersion: 1.8
+  assetPath: Assets/Unity-Logs-Viewer/ReporterDocumentation/warning.png
+  uploadId: 325743

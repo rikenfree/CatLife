@@ -17,7 +17,7 @@ public class InAppPurches : MonoBehaviour
 
     void Start()
     {
-        StartCoroutine(LoadJSONAndCreatePopup());
+      //  StartCoroutine(LoadJSONAndCreatePopup());
     }
 
     public void ClosePopup()

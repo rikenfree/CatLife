@@ -55,19 +55,19 @@ public class UiManager : MonoBehaviour
     {
         if (pageIndex == scrollSnap.NumberOfPanels - 1)
         {
-            if (SuperStarAd.Instance.NoAds == 0)
-            {
-                SuperStarAd.Instance.ShowForceInterstitialWithLoader((k) =>
-                    {
-                        nextButton.gameObject.SetActive(false);
-                        getStartedButton.gameObject.SetActive(true);
-                    }, 3);
-            }
-            else
-            {
-                nextButton.gameObject.SetActive(false);
-                getStartedButton.gameObject.SetActive(true);
-            }
+            // if (SuperStarAd.Instance.NoAds == 0)
+            // {
+            //     SuperStarAd.Instance.ShowForceInterstitialWithLoader((k) =>
+            //         {
+            //             nextButton.gameObject.SetActive(false);
+            //             getStartedButton.gameObject.SetActive(true);
+            //         }, 3);
+            // }
+            // else
+
+            nextButton.gameObject.SetActive(false);
+            getStartedButton.gameObject.SetActive(true);
+
         }
         else
         {
