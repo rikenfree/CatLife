@@ -83,8 +83,14 @@ public class APIManager : MonoBehaviour
 
     public GameObject[] BannerVidDisplay;
 
+    public GameObject nativeAdPrefab;
+
+    public GameObject[] nativeAdPrefabs;
+
     public void SetUp()
     {
+        StartCoroutine(IESetUpWithNativeAds());
+
         for (int i = 0; i < appData.catogary.Count; i++)
         {
             GameObject go = Instantiate(catSection, catParent);
@@ -106,6 +112,56 @@ public class APIManager : MonoBehaviour
                 StartCoroutine(DownloadProfilePic(appData.catogary[i].catogaryData[j].iconUrl, go1.GetComponent<ProceduralImage>()));
             }
         }
+    }
+
+    IEnumerator IESetUpWithNativeAds()
+    {
+        for (int i = 0; i < appData.catogary.Count; i++)
+        {
+            // Create cat section
+            GameObject go = Instantiate(catSection, catParent);
+            go.GetComponent<CategorySection>().titleTxt.text = appData.catogary[i].name;
+            go.GetComponent<CategorySection>().id = i;
+            // Wait a frame to ensure the cat section is properly initialized
+            yield return null;
+            // Load stories for this category
+            for (int j = 0; j < appData.catogary[i].catogaryData.Count; j++)
+            {
+                if (i == 0 && j < 5)
+                {
+                    BannerVidDisplay[j].transform.GetComponent<StoryScript>().url = appData.catogary[i].catogaryData[j].videoUrl;
+                    StartCoroutine(DownloadProfilePic(appData.catogary[i].catogaryData[j].iconUrl, BannerVidDisplay[j].transform.GetComponent<ProceduralImage>()));
+                }
+                GameObject go1 = Instantiate(story, go.GetComponent<CategorySection>().container);
+                go1.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = appData.catogary[i].catogaryData[j].name;
+                go1.transform.GetComponent<StoryScript>().url = appData.catogary[i].catogaryData[j].videoUrl;
+                StartCoroutine(DownloadProfilePic(appData.catogary[i].catogaryData[j].iconUrl, go1.GetComponent<ProceduralImage>()));
+            }
+            // Add delay between cat sections
+            yield return new WaitForSeconds(0.1f);
+            // Clone native ad prefab after each cat section (except the last one)
+            if (i < appData.catogary.Count - 1)
+            {
+                GameObject selectedNativeAdPrefab = GetNativeAdPrefab();
+                if (selectedNativeAdPrefab != null)
+                {
+                    GameObject nativeAd = Instantiate(selectedNativeAdPrefab, catParent);
+                    // Wait for native ad to initialize
+                    yield return new WaitForSeconds(0.2f);
+                }
+            }
+        }
+    }
+
+    private GameObject GetNativeAdPrefab()
+    {
+        // If you have an array of prefabs, randomly select one
+        if (nativeAdPrefabs != null && nativeAdPrefabs.Length > 0)
+        {
+            return nativeAdPrefabs[Random.Range(0, nativeAdPrefabs.Length)];
+        }
+        // Otherwise use the single prefab
+        return nativeAdPrefab;
     }
 
     public Transform gridConteiner;
@@ -223,7 +279,7 @@ public class APIManager : MonoBehaviour
             Debug.Log("Removed from favourites: " + favouriteVideoUrl);
 
             string objectName = "Fav_" + favouriteVideoUrl;
-            Transform favItem = favouriteScreenContent.transform.FindChild(objectName);
+            Transform favItem = favouriteScreenContent.transform.Find(objectName);
 
             if (favItem != null)
             {

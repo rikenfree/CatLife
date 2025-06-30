@@ -59,11 +59,9 @@ public class UiManager : MonoBehaviour
         {
             if (SuperStarAd.Instance.NoAds == 0)
             {
-                SuperStarAd.Instance.ShowForceInterstitialWithLoader((k) =>
-                    {
-                        nextButton.gameObject.SetActive(false);
-                        getStartedButton.gameObject.SetActive(true);
-                    }, 3);
+                nextButton.gameObject.SetActive(false);
+                getStartedButton.gameObject.SetActive(true);
+
             }
             else
             {
