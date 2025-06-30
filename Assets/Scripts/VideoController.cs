@@ -9,9 +9,12 @@ public class VideoController : MonoBehaviour
     public GameObject panelToActivate;
     public GameObject downloadOptions;
     public GameObject allOptionObj;
+    public GameObject favoriteVideoEndScreen;
 
     public static VideoController instance;
-    public string currentUrl;
+    public string currentVideoUrl;
+    public string currentIconUrl;
+    public int currentIndex;
 
     private void Awake()
     {
@@ -42,8 +45,14 @@ public class VideoController : MonoBehaviour
 
     void OnVideoFinished(VideoPlayer vp)
     {
-        if (panelToActivate != null)
+        if (UiManager.instance.isFavoriteVideo)
+        {
+            favoriteVideoEndScreen.SetActive(true);
+        }
+        else
+        {
             panelToActivate.SetActive(true); // Show panel when video ends
+        }
     }
 
     public void OpenDownloadOption(bool isActive)
@@ -57,12 +66,12 @@ public class VideoController : MonoBehaviour
         {
             SuperStarAd.Instance.ShowForceInterstitialWithLoader((k) =>
             {
-                PlayVideo(currentUrl);
+                PlayVideo(currentVideoUrl);
             }, 3);
         }
         else
         {
-            PlayVideo(currentUrl);
+            PlayVideo(currentVideoUrl);
         }
     }
 

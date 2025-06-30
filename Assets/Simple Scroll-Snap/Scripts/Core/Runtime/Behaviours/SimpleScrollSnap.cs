@@ -596,8 +596,9 @@ namespace DanielLochner.Assets.SimpleScrollSnap
             {
                 if (GetDisplacementFromCenter(CenteredPanel).magnitude < (Viewport.rect.width / 10f))
                 {
-                    onPanelCentered.Invoke(CenteredPanel, SelectedPanel);
+                    int previousPanel = SelectedPanel;
                     SelectedPanel = CenteredPanel;
+                    onPanelCentered.Invoke(SelectedPanel, previousPanel); // Use SelectedPanel as the new centered panel
                 }
             }
             else

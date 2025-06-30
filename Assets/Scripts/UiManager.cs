@@ -30,6 +30,8 @@ public class UiManager : MonoBehaviour
 
     public GameObject favouriteVideoScreen;
 
+    public bool isFavoriteVideo;
+
 
     void Awake()
     {
@@ -55,7 +57,7 @@ public class UiManager : MonoBehaviour
 
     void OnTutorialPageChanged(int pageIndex)
     {
-        if (pageIndex == scrollSnap.NumberOfPanels - 1)
+        if (pageIndex == scrollSnap.NumberOfPanels - 2)
         {
             if (SuperStarAd.Instance.NoAds == 0)
             {
@@ -131,8 +133,35 @@ public class UiManager : MonoBehaviour
     public void StopVideoPlayer()
     {
         VideoController.instance.videoPlayer.Stop();
+        APIManager.instance.SetGridPanel(VideoController.instance.currentIndex);
         gridPanel.SetActive(true);
         VideoController.instance.panelToActivate.SetActive(false);
+        VideoController.instance.videoDisplay.SetActive(false);
+
+        // if (!isFavoriteVideo)
+        // {
+        //     VideoController.instance.videoPlayer.Stop();
+        //     APIManager.instance.SetGridPanel(VideoController.instance.currentIndex);
+        //     gridPanel.SetActive(true);
+        //     VideoController.instance.panelToActivate.SetActive(false);
+        //     VideoController.instance.videoDisplay.SetActive(false);
+        // }
+        // else
+        // {
+        //     VideoController.instance.videoPlayer.Stop();
+        //     APIManager.instance.SetGridPanel(VideoController.instance.currentIndex);
+        //     favouriteVideoScreen.SetActive(true);
+        //     VideoController.instance.panelToActivate.SetActive(false);
+        //     VideoController.instance.videoDisplay.SetActive(false);
+        // }
+    }
+
+    public void StopFavoriteVideoPlayer()
+    {
+        VideoController.instance.videoPlayer.Stop();
+        // APIManager.instance.SetGridPanel(VideoController.instance.currentIndex);
+        favouriteVideoScreen.SetActive(true);
+        VideoController.instance.favoriteVideoEndScreen.SetActive(false);
         VideoController.instance.videoDisplay.SetActive(false);
     }
 
@@ -140,15 +169,19 @@ public class UiManager : MonoBehaviour
     {
         Main_SelectionPanel.SetActive(true);
         VideoController.instance.panelToActivate.SetActive(false);
+        VideoController.instance.favoriteVideoEndScreen.SetActive(false);
         VideoController.instance.videoDisplay.SetActive(false);
     }
 
     public void FavouriteBtnClick()
     {
+        isFavoriteVideo = true;
         favouriteVideoScreen.SetActive(true);
     }
+
     public void BackToFavouriteBtnClick()
     {
+        isFavoriteVideo = false;
         favouriteVideoScreen.SetActive(false);
     }
 

@@ -172,30 +172,63 @@ public class APIManager : MonoBehaviour
     public GameObject gridPanel;
     public GameObject mainPanel;
 
+    // public void SetGridPanel(int i)
+    // {
+    //     //go.GetComponent<CategorySection>().titleTxt.text = appData.catogary[i].name;
+
+    //     for (int j = gridConteiner.childCount; j > 0; j--)
+    //     {
+    //         Destroy(gridConteiner.GetChild(0).gameObject);
+    //     }
+
+    //     for (int j = 0; j < appData.catogary[i].catogaryData.Count; j++)
+    //     {
+    //         // if (j % 2 == 0)
+    //         // {
+    //         //     go = Instantiate(rowContainer, gridConteiner);
+    //         // }
+    //         go = Instantiate(rowContainer, gridConteiner);
+    //         go.transform.GetChild(j % 2).GetChild(0).GetComponent<TextMeshProUGUI>().text = appData.catogary[i].catogaryData[j].name;
+    //         go.transform.GetChild(j % 2).GetComponent<StoryScript>().url = appData.catogary[i].catogaryData[j].videoUrl;
+    //         StartCoroutine(DownloadProfilePic(appData.catogary[i].catogaryData[j].iconUrl, go.transform.GetChild(j % 2).GetComponent<ProceduralImage>()));
+
+    //         gridPanel.SetActive(true);
+    //         //mainPanel.SetActive(false);
+    //     }
+    // }
+
     public void SetGridPanel(int i)
     {
-        //go.GetComponent<CategorySection>().titleTxt.text = appData.catogary[i].name;
-
-        for (int j = gridConteiner.childCount; j > 0; j--)
+        // Clear old children
+        for (int j = gridConteiner.childCount - 1; j >= 0; j--)
         {
-            Destroy(gridConteiner.GetChild(0).gameObject);
+            Destroy(gridConteiner.GetChild(j).gameObject);
         }
 
+        // Loop through all stories in the selected category
         for (int j = 0; j < appData.catogary[i].catogaryData.Count; j++)
         {
-            if (j % 2 == 0)
-            {
-                go = Instantiate(rowContainer, gridConteiner);
-            }
+            // Always instantiate a new rowContainer for each story
+            go = Instantiate(rowContainer, gridConteiner);
 
-            go.transform.GetChild(j % 2).GetChild(0).GetComponent<TextMeshProUGUI>().text = appData.catogary[i].catogaryData[j].name;
-            go.transform.GetChild(j % 2).GetComponent<StoryScript>().url = appData.catogary[i].catogaryData[j].videoUrl;
-            StartCoroutine(DownloadProfilePic(appData.catogary[i].catogaryData[j].iconUrl, go.transform.GetChild(j % 2).GetComponent<ProceduralImage>()));
+            // Access the only child in this rowContainer (since now it only holds 1 story)
+            Transform storyObj = go.transform.GetChild(0); // Assuming the story is the first (and only) child
 
-            gridPanel.SetActive(true);
-            //mainPanel.SetActive(false);
+            // Set text and data
+            storyObj.GetChild(0).GetComponent<TextMeshProUGUI>().text = appData.catogary[i].catogaryData[j].name;
+            storyObj.GetComponent<StoryScript>().url = appData.catogary[i].catogaryData[j].videoUrl;
+            
+
+            // Download and apply image
+            StartCoroutine(DownloadProfilePic(
+                appData.catogary[i].catogaryData[j].iconUrl,
+                storyObj.GetComponent<ProceduralImage>())
+            );
         }
+
+        gridPanel.SetActive(true);
     }
+
 
     public bool IsInternetReachable()
     {
@@ -236,29 +269,7 @@ public class APIManager : MonoBehaviour
     }
 
     public GameObject favouriteScreenContent;
-
-    //public void AddFavouriteData()
-    //{
-    //    FavouriteData data = new FavouriteData();
-    //    data.videoUrl = favouriteVideoUrl;
-
-    //    // Check if already in the list
-    //    FavouriteData existingData = favouriteData.Find(x => x.videoUrl == data.videoUrl);
-
-    //    if (existingData == null)
-    //    {
-    //        favouriteData.Add(data);
-    //        ShowDataInFavouriteScreen(data.videoUrl);
-    //        Debug.Log("Added to favourites: " + favouriteVideoUrl);
-    //    }
-    //    else
-    //    {
-    //        favouriteData.Remove(existingData);
-    //        Debug.Log("Removed from favourites: " + favouriteVideoUrl);
-    //    }
-
-    //    SaveFavouritesToPrefs();
-    //}
+    private List<GameObject> favouriteSpawnedObjects = new List<GameObject>();
 
     public void AddFavouriteData()
     {
@@ -270,7 +281,7 @@ public class APIManager : MonoBehaviour
         if (existingData == null)
         {
             favouriteData.Add(data);
-            ShowDataInFavouriteScreen(data.videoUrl);
+            ShowDataInFavouriteScreen(data.videoUrl, data.iconUrl);
             Debug.Log("Added to favourites: " + favouriteVideoUrl);
         }
         else
@@ -278,18 +289,15 @@ public class APIManager : MonoBehaviour
             favouriteData.Remove(existingData);
             Debug.Log("Removed from favourites: " + favouriteVideoUrl);
 
-            string objectName = "Fav_" + favouriteVideoUrl;
-            Transform favItem = favouriteScreenContent.transform.Find(objectName);
+            // Find the object in the spawned list that matches this video URL
+            GameObject targetToRemove = favouriteSpawnedObjects.Find(obj =>
+                obj != null && obj.GetComponent<StoryScript>().url == favouriteVideoUrl);
 
-            if (favItem != null)
+            if (targetToRemove != null)
             {
-                Destroy(favItem.gameObject);
-                Debug.Log("Destroyed UI object for: " + favouriteVideoUrl);
-            }
-            else
-            {
-                Debug.Log("Not Found: " + objectName);
-                Debug.Log("Not Found: " + favItem.name);
+                Destroy(targetToRemove);
+                favouriteSpawnedObjects.Remove(targetToRemove);
+                Debug.Log("Destroyed UI GameObject for: " + favouriteVideoUrl);
             }
         }
 
@@ -315,19 +323,20 @@ public class APIManager : MonoBehaviour
 
             for (int i = 0; i < favouriteData.Count; i++)
             {
-                ShowDataInFavouriteScreen(favouriteData[i].videoUrl);
+                ShowDataInFavouriteScreen(favouriteData[i].videoUrl, favouriteData[i].iconUrl);
             }
         }
     }
 
-    public void ShowDataInFavouriteScreen(string data)
+    public void ShowDataInFavouriteScreen(string videoUrl, string iconUrl)
     {
         GameObject videoObject = Instantiate(story, favouriteScreenContent.transform);
-        videoObject.transform.GetComponent<StoryScript>().url = data;
+        videoObject.transform.GetComponent<StoryScript>().url = videoUrl;
 
-        // Set a unique name so we can destroy it later
-        videoObject.name = "Fav_" + data;
+        // Add to spawned object list
+        favouriteSpawnedObjects.Add(videoObject);
     }
+
 
 }
 
@@ -370,6 +379,6 @@ public class CatogaryDatum
 [System.Serializable]
 public class FavouriteData
 {
-    // public string iconUrl;
+    public string iconUrl;
     public string videoUrl;
 }
