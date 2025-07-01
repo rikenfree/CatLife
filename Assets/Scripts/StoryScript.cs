@@ -6,38 +6,24 @@ public class StoryScript : MonoBehaviour
 {
     public string url;
 
-
     public VideoPlayer videoPlayer;
-
-    // public void SetURLAndPlayVideo()
-    // {
-    //     UiManager.instance.loadingScreen.SetActive(true);
-    //     VideoController.instance.currentUrl = url;
-    // }
 
     public void SetURLAndPlayVideo()
     {
-        UiManager.instance.loadingScreen.SetActive(true);
-        VideoController.instance.currentVideoUrl = url;
-
-        // Going up the hierarchy to get CatSection(Clone)
-        Transform catSection = transform.parent.parent.parent.parent; // Adjust levels if needed
-
-        // Get the script attached to CatSection(Clone)
-        CategorySection categoryScript = catSection.GetComponent<CategorySection>(); // Replace with actual script name
-
-        if (categoryScript != null)
+        if (SuperStarAd.Instance.NoAds == 0)
         {
-            Debug.Log("Successfully got the CatSection script!");
-            // You can now call methods or access variables in that script
-            // e.g., catScript.DoSomething();
+            SuperStarAd.Instance.ShowForceInterstitialWithLoader((k) =>
+            {
+                SuperStarAd.Instance.HideBannerAd();
+                UiManager.instance.loadingScreen.SetActive(true);
+                VideoController.instance.currentUrl = url;
+            }, 3);
         }
         else
         {
-            Debug.LogWarning("CatSectionScript not found on parent!");
+            SuperStarAd.Instance.HideBannerAd();
+            UiManager.instance.loadingScreen.SetActive(true);
+            VideoController.instance.currentUrl = url;
         }
-
-        VideoController.instance.currentIndex = categoryScript.id; // Your logic here
     }
-
 }

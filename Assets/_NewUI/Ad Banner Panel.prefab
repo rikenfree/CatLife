@@ -68,8 +68,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: AD Banner
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: cf7d2856ce3141047a01142520129063, type: 2}
+  m_sharedMaterial: {fileID: -1873572903158713545, guid: cf7d2856ce3141047a01142520129063, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -238,7 +238,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.94509804, g: 0.94509804, b: 0.94509804, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -277,7 +277,6 @@ MonoBehaviour:
   adHeadline: {fileID: 6805001706973546014}
   adCallToAction: {fileID: 5043581917234336671}
   adAdvertiser: {fileID: 1671923524033491365}
-  adContainer: {fileID: 3318684660127486065}
 --- !u!65 &937938183312469624
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -461,8 +460,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: AD Banner
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: cf7d2856ce3141047a01142520129063, type: 2}
+  m_sharedMaterial: {fileID: -1873572903158713545, guid: cf7d2856ce3141047a01142520129063, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -944,8 +943,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Button
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: cf7d2856ce3141047a01142520129063, type: 2}
+  m_sharedMaterial: {fileID: -1873572903158713545, guid: cf7d2856ce3141047a01142520129063, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

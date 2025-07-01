@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using SuperStarSdk;
 
 public class CategorySection : MonoBehaviour
 {
@@ -22,6 +23,16 @@ public class CategorySection : MonoBehaviour
 
     public void OpenGridPanel()
     {
-        APIManager.instance.SetGridPanel(id);
+        if(SuperStarAd.Instance.NoAds == 0)
+        {
+            SuperStarAd.Instance.ShowForceInterstitialWithLoader((k) =>
+            {
+                APIManager.instance.SetGridPanel(id);
+            }, 3);
+        }
+        else
+        {
+            APIManager.instance.SetGridPanel(id);
+        }
     }
 }

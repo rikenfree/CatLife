@@ -82,6 +82,8 @@ public class UiManager : MonoBehaviour
     {
         TutorialPanel.SetActive(false);
         Main_SelectionPanel.SetActive(true);
+        // Show banner ad when tutorial is hidden
+        SuperStarAd.Instance.ShowBannerAd();
     }
 
     // Call this when loading is done
@@ -89,6 +91,8 @@ public class UiManager : MonoBehaviour
     {
         LoadingPanel.SetActive(false);
         TutorialPanel.SetActive(true);
+        // Hide banner ad when tutorial is shown
+        SuperStarAd.Instance.HideBannerAd();
     }
 
     public void SetLoadingProgress(float progress)
