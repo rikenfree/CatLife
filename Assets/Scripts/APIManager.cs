@@ -125,6 +125,7 @@ public class APIManager : MonoBehaviour
 
     public Transform gridConteiner;
     public GameObject rowContainer;
+    public GameObject rowParent;
 
     GameObject go;
 
@@ -137,23 +138,50 @@ public class APIManager : MonoBehaviour
         {
             Destroy(gridConteiner.GetChild(j).gameObject);
         }
-        // int adInterval = 2;
+
+        //for (int j = 0; j < appData.catogary[i].catogaryData.Count; j++)
+        //{
+        //    go = Instantiate(rowContainer, gridConteiner);
+        //    Transform storyObj = go.transform.GetChild(0);
+        //    storyObj.GetChild(0).GetComponent<TextMeshProUGUI>().text = appData.catogary[i].catogaryData[j].name;
+        //    storyObj.GetComponent<StoryScript>().url = appData.catogary[i].catogaryData[j].videoUrl;
+        //    storyObj.GetComponent<StoryScript>().name = appData.catogary[i].catogaryData[j].name;
+        //    StartCoroutine(DownloadProfilePic(
+        //        appData.catogary[i].catogaryData[j].iconUrl,
+        //        storyObj.GetComponent<ProceduralImage>())
+        //    );
+        //}
+
+        GameObject currentParent = null;
+        int adInterval = 2;
+
         for (int j = 0; j < appData.catogary[i].catogaryData.Count; j++)
         {
-            go = Instantiate(rowContainer, gridConteiner);
+            // Create new parent every 2 rowContainers (i.e., j % 2 == 0)
+            if (j % 2 == 0)
+            {
+                currentParent = Instantiate(rowParent, gridConteiner);
+                currentParent.transform.localScale = Vector3.one;
+            }
+
+            // Instantiate rowContainer inside the current parent
+            GameObject go = Instantiate(rowContainer, currentParent.transform);
+
+            // Fill data
             Transform storyObj = go.transform.GetChild(0);
             storyObj.GetChild(0).GetComponent<TextMeshProUGUI>().text = appData.catogary[i].catogaryData[j].name;
             storyObj.GetComponent<StoryScript>().url = appData.catogary[i].catogaryData[j].videoUrl;
             storyObj.GetComponent<StoryScript>().name = appData.catogary[i].catogaryData[j].name;
+
             StartCoroutine(DownloadProfilePic(
                 appData.catogary[i].catogaryData[j].iconUrl,
                 storyObj.GetComponent<ProceduralImage>())
             );
 
-            // if ((j + 1) % adInterval == 0)
-            // {
-            //     GameObject adGo = Instantiate(nativeAdPrefab, gridConteiner);
-            // }
+            if ((j + 1) % adInterval == 0)
+            {
+                GameObject adGo = Instantiate(nativeAdPrefab, gridConteiner);
+            }
         }
         gridPanel.SetActive(true);
     }
