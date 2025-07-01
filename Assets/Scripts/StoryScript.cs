@@ -16,14 +16,14 @@ public class StoryScript : MonoBehaviour
             {
                 SuperStarAd.Instance.HideBannerAd();
                 UiManager.instance.loadingScreen.SetActive(true);
-                VideoController.instance.currentUrl = url;
+                VideoController.instance.currentVideoUrl = url;
             }, 3);
         }
         else
         {
             SuperStarAd.Instance.HideBannerAd();
             UiManager.instance.loadingScreen.SetActive(true);
-            VideoController.instance.currentUrl = url;
+            VideoController.instance.currentVideoUrl = url;
         }
     }
 }
