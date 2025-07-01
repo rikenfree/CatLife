@@ -32,6 +32,7 @@ public class VideoController : MonoBehaviour
         videoPlayer.Play();
         videoDisplay.SetActive(true);
         APIManager.instance.favouriteVideoUrl = url;
+        SuperStarAd.Instance.ShowBannerAd();
         UiManager.instance.loadingScreen.SetActive(false);
         if (videoPlayer != null)
         {

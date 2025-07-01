@@ -85,12 +85,9 @@ public class APIManager : MonoBehaviour
 
     public GameObject nativeAdPrefab;
 
-    public GameObject[] nativeAdPrefabs;
-
     public void SetUp()
     {
-        StartCoroutine(IESetUpWithNativeAds());
-
+        int adInterval = 1; // for example, after every 2 catSections
         for (int i = 0; i < appData.catogary.Count; i++)
         {
             GameObject go = Instantiate(catSection, catParent);
@@ -111,58 +108,15 @@ public class APIManager : MonoBehaviour
                 go1.transform.GetComponent<StoryScript>().url = appData.catogary[i].catogaryData[j].videoUrl;
                 StartCoroutine(DownloadProfilePic(appData.catogary[i].catogaryData[j].iconUrl, go1.GetComponent<ProceduralImage>()));
             }
-        }
-    }
 
-    IEnumerator IESetUpWithNativeAds()
-    {
-        for (int i = 0; i < appData.catogary.Count; i++)
-        {
-            // Create cat section
-            GameObject go = Instantiate(catSection, catParent);
-            go.GetComponent<CategorySection>().titleTxt.text = appData.catogary[i].name;
-            go.GetComponent<CategorySection>().id = i;
-            // Wait a frame to ensure the cat section is properly initialized
-            yield return null;
-            // Load stories for this category
-            for (int j = 0; j < appData.catogary[i].catogaryData.Count; j++)
+            if ((i + 1) % adInterval == 0)
             {
-                if (i == 0 && j < 5)
-                {
-                    BannerVidDisplay[j].transform.GetComponent<StoryScript>().url = appData.catogary[i].catogaryData[j].videoUrl;
-                    StartCoroutine(DownloadProfilePic(appData.catogary[i].catogaryData[j].iconUrl, BannerVidDisplay[j].transform.GetComponent<ProceduralImage>()));
-                }
-                GameObject go1 = Instantiate(story, go.GetComponent<CategorySection>().container);
-                go1.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = appData.catogary[i].catogaryData[j].name;
-                go1.transform.GetComponent<StoryScript>().url = appData.catogary[i].catogaryData[j].videoUrl;
-                StartCoroutine(DownloadProfilePic(appData.catogary[i].catogaryData[j].iconUrl, go1.GetComponent<ProceduralImage>()));
-            }
-            // Add delay between cat sections
-            yield return new WaitForSeconds(0.1f);
-            // Clone native ad prefab after each cat section (except the last one)
-            if (i < appData.catogary.Count - 1)
-            {
-                GameObject selectedNativeAdPrefab = GetNativeAdPrefab();
-                if (selectedNativeAdPrefab != null)
-                {
-                    GameObject nativeAd = Instantiate(selectedNativeAdPrefab, catParent);
-                    // Wait for native ad to initialize
-                    yield return new WaitForSeconds(0.2f);
-                }
+                GameObject adGo = Instantiate(nativeAdPrefab, catParent);
+                // ... setup adGo ...
             }
         }
     }
 
-    private GameObject GetNativeAdPrefab()
-    {
-        // If you have an array of prefabs, randomly select one
-        if (nativeAdPrefabs != null && nativeAdPrefabs.Length > 0)
-        {
-            return nativeAdPrefabs[Random.Range(0, nativeAdPrefabs.Length)];
-        }
-        // Otherwise use the single prefab
-        return nativeAdPrefab;
-    }
 
     public Transform gridConteiner;
     public GameObject rowContainer;
@@ -174,18 +128,29 @@ public class APIManager : MonoBehaviour
 
     public void SetGridPanel(int i)
     {
-        //go.GetComponent<CategorySection>().titleTxt.text = appData.catogary[i].name;
-
+        // Clear previous children
         for (int j = gridConteiner.childCount; j > 0; j--)
         {
             Destroy(gridConteiner.GetChild(0).gameObject);
         }
+
+        GameObject go = null;
+        int adInterval = 1; // 1 = after every rowContainer, 2 = after every 2 rowContainers, etc.
+        int rowCount = 0;
 
         for (int j = 0; j < appData.catogary[i].catogaryData.Count; j++)
         {
             if (j % 2 == 0)
             {
                 go = Instantiate(rowContainer, gridConteiner);
+                rowCount++;
+
+                // Insert native ad after every rowContainer (or every N rows)
+                if (rowCount % adInterval == 0)
+                {
+                    GameObject adGo = Instantiate(nativeAdPrefab, gridConteiner);
+                    // Optionally, set up adGo here
+                }
             }
 
             go.transform.GetChild(j % 2).GetChild(0).GetComponent<TextMeshProUGUI>().text = appData.catogary[i].catogaryData[j].name;
