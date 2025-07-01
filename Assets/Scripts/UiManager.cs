@@ -29,6 +29,8 @@ public class UiManager : MonoBehaviour
     public GameObject downloadOption, loadingScreen;
 
     public GameObject favouriteVideoScreen;
+    public GameObject favoriteScreenContent;
+    public TextMeshProUGUI favoriteScreenText;
 
     public bool isFavoriteVideo;
 
@@ -138,55 +140,55 @@ public class UiManager : MonoBehaviour
     {
         VideoController.instance.videoPlayer.Stop();
         APIManager.instance.SetGridPanel(VideoController.instance.currentIndex);
-        gridPanel.SetActive(true);
         VideoController.instance.panelToActivate.SetActive(false);
         VideoController.instance.videoDisplay.SetActive(false);
-
-        // if (!isFavoriteVideo)
-        // {
-        //     VideoController.instance.videoPlayer.Stop();
-        //     APIManager.instance.SetGridPanel(VideoController.instance.currentIndex);
-        //     gridPanel.SetActive(true);
-        //     VideoController.instance.panelToActivate.SetActive(false);
-        //     VideoController.instance.videoDisplay.SetActive(false);
-        // }
-        // else
-        // {
-        //     VideoController.instance.videoPlayer.Stop();
-        //     APIManager.instance.SetGridPanel(VideoController.instance.currentIndex);
-        //     favouriteVideoScreen.SetActive(true);
-        //     VideoController.instance.panelToActivate.SetActive(false);
-        //     VideoController.instance.videoDisplay.SetActive(false);
-        // }
+        gridPanel.SetActive(true);
     }
 
     public void StopFavoriteVideoPlayer()
     {
         VideoController.instance.videoPlayer.Stop();
         // APIManager.instance.SetGridPanel(VideoController.instance.currentIndex);
-        favouriteVideoScreen.SetActive(true);
+        FavoriteScreenTextRemove();
         VideoController.instance.favoriteVideoEndScreen.SetActive(false);
         VideoController.instance.videoDisplay.SetActive(false);
+        favouriteVideoScreen.SetActive(true);
     }
 
     public void HomeBtnClick()
     {
+        VideoController.instance.videoPlayer.Stop();
         Main_SelectionPanel.SetActive(true);
+        gridPanel.SetActive(false);
         VideoController.instance.panelToActivate.SetActive(false);
         VideoController.instance.favoriteVideoEndScreen.SetActive(false);
         VideoController.instance.videoDisplay.SetActive(false);
+    }
+
+    public void FavoriteScreenTextRemove()
+    {
+        if (favoriteScreenContent.transform.childCount > 0)
+        {
+            favoriteScreenText.transform.gameObject.SetActive(false);
+        }
+        else
+        {
+            favoriteScreenText.transform.gameObject.SetActive(true);
+        }
     }
 
     public void FavouriteBtnClick()
     {
         isFavoriteVideo = true;
         favouriteVideoScreen.SetActive(true);
+        FavoriteScreenTextRemove();
     }
 
     public void BackToFavouriteBtnClick()
     {
         isFavoriteVideo = false;
         favouriteVideoScreen.SetActive(false);
+        FavoriteScreenTextRemove();
     }
 
     public void HideGridPanel()

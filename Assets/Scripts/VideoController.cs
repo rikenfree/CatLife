@@ -4,16 +4,24 @@ using SuperStarSdk;
 
 public class VideoController : MonoBehaviour
 {
+    [Header("Video Player")]
     public VideoPlayer videoPlayer;
     public GameObject videoDisplay;
     public GameObject panelToActivate;
+
+    [Header("Download Options")]
     public GameObject downloadOptions;
     public GameObject allOptionObj;
+
+    [Header("Favorite Video End Screen")]
     public GameObject favoriteVideoEndScreen;
+    public GameObject favoriteScreenDownloadOption;
+    public GameObject favoriteScreenAllOption;
 
     public static VideoController instance;
     public string currentVideoUrl;
     public string currentIconUrl;
+    public string currentName;
     public int currentIndex;
 
     private void Awake()
@@ -29,12 +37,14 @@ public class VideoController : MonoBehaviour
             panelToActivate.SetActive(false);
     }
 
-    public void PlayVideo(string url)
+    public void PlayVideo(string url, string iconUrl, string name)
     {
         videoPlayer.url = url;
         videoPlayer.Play();
         videoDisplay.SetActive(true);
         APIManager.instance.favouriteVideoUrl = url;
+        APIManager.instance.favouriteIconUrl = iconUrl;
+        APIManager.instance.favouriteName = name;
         SuperStarAd.Instance.ShowBannerAd();
         UiManager.instance.loadingScreen.SetActive(false);
         if (videoPlayer != null)
@@ -67,12 +77,12 @@ public class VideoController : MonoBehaviour
         {
             SuperStarAd.Instance.ShowForceInterstitialWithLoader((k) =>
             {
-                PlayVideo(currentVideoUrl);
+                PlayVideo(currentVideoUrl, currentIconUrl, currentName);
             }, 3);
         }
         else
         {
-            PlayVideo(currentVideoUrl);
+            PlayVideo(currentVideoUrl, currentIconUrl, currentName);
         }
     }
 

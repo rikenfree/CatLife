@@ -40,9 +40,8 @@ public class LoadingSlider : MonoBehaviour
         {
             Debug.Log("Complete");
             VideoController.instance.PlayURLVideo();
-            //UiManager.instance.ScreenOnOff(UiManager.instance.loadingScreen, VideoController.instance.videoDisplay);
-            // imageComp.fillAmount = 0.0f;
-            // text.text = "0%";
+            imageComp.fillAmount = 0.0f;
+            text.text = "0%";
         }
     }
 }

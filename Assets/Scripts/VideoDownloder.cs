@@ -22,6 +22,13 @@ public class VideoDownloader : MonoBehaviour
         VideoController.instance.OpenDownloadOption(true);
     }
 
+    public void OpenDownloadScreenFavoriteVideo()
+    {
+        // Open Download Option Screen..
+        VideoController.instance.favoriteScreenAllOption.SetActive(false);
+        VideoController.instance.favoriteScreenDownloadOption.SetActive(true);
+    }
+
     // Call to download as HD
     public void DownloadHD()
     {
